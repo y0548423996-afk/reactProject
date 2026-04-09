@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { KeyboardConfig, TypedChar } from "./types";
-import LetterComponent from "./WhichLanguage"; // ייבוא הקומפוננטה שיצרת
+import { KeyboardConfig, TypedChar } from "../types";
 import { HEBREW_KEYS, ENGLISH_KEYS } from '../constants';
 import WhichLanguage from "./WhichLanguage";
 
