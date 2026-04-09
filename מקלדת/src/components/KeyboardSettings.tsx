@@ -5,19 +5,16 @@ import WhichLanguage from "./WhichLanguage";
 
 export default function KeyboardSetting() {
     
-    // 1. הסטייט המרכזי git add .של ההגדרות
     const [currentConfig, setCurrentConfig] = useState<KeyboardConfig>({
-        color: 'black',
+        color: '#000000', // ברירת מחדל שחור
         fontSize: '18px',
         isBold: false,
-        language: 'hebrew', // או 'english'
+        language: 'hebrew',
         isUpper: false
     });
 
-    // 2. סטייט למערך התווים שהוקלדו
     const [typedChars, setTypedChars] = useState<TypedChar[]>([]);
 
-    // --- פונקציות עזר (כבר היו לך) ---
     const changeLanguage = () => {
         setCurrentConfig({ 
             ...currentConfig, 
@@ -26,57 +23,87 @@ export default function KeyboardSetting() {
     };
 
     const addChar = (char: string) => {
-        // כאן קורה הקסם: האות מקבלת את העיצוב שיש באותו רגע ב-currentConfig
         const newCharObj: TypedChar = {
             ...currentConfig,
             value: char,
-            id: Math.random().toString()
+            // אם החלטת לוותר על ה-ID, השתמשי בגרסה עם ה-index ב-map למטה
+            id: Math.random().toString() 
         };
         setTypedChars([...typedChars, newCharObj]);
     };
 
-    // בחירת האותיות להצגה לפי השפה בסטייט
     const activeLetters = currentConfig.language === 'hebrew' ? HEBREW_KEYS : ENGLISH_KEYS;
 
     return (
-        <div className="keyboard-container" style={{ direction: 'ltr', padding: '20px' }}>
+        <div className="keyboard-container" style={{ direction: 'rtl', padding: '20px' }}>
             
-            {/* 1. אזור התצוגה (איפה שהטקסט מופיע) */}
+            {/* 1. אזור התצוגה */}
             <div className="display-area" style={{ minHeight: '50px', border: '1px solid #ccc', marginBottom: '20px', padding: '10px' }}>
-                {typedChars.map(charObj => (
+                {typedChars.map((charObj) => (
                     <span key={charObj.id} style={{ 
                         color: charObj.color, 
                         fontSize: charObj.fontSize, 
                         fontWeight: charObj.isBold ? 'bold' : 'normal',
-                        textTransform: charObj.isUpper ? 'uppercase' : 'lowercase'
                     }}>
                         {charObj.value}
                     </span>
                 ))}
             </div>
 
-            {/* 2. כפתורי שליטה (צבע, שפה וכו') */}
-            <div className="controls" style={{ marginBottom: '10px' }}>
-                <button onClick={changeLanguage}>שנה שפה ({currentConfig.language})</button>
-                <button onClick={() => setCurrentConfig({...currentConfig, isBold: !currentConfig.isBold})}>
-                    {currentConfig.isBold ? 'בטל הדגשה' : 'הדגש'}
+            {/* 2. כפתורי שליטה - כאן הוספתי את האפשרויות למשתמש */}
+            <div className="controls" style={{ marginBottom: '20px', display: 'flex', gap: '15px', alignItems: 'center' }}>
+                
+                {/* בחירת צבע חופשית */}
+                <div>
+                    <label>בחר צבע: </label>
+                    <input 
+                        type="color" 
+                        value={currentConfig.color}
+                        onChange={(e) => setCurrentConfig({...currentConfig, color: e.target.value})}
+                    />
+                </div>
+
+                {/* בחירת גודל גופן */}
+                <div>
+                    <label>גודל: </label>
+                    <select 
+                        value={currentConfig.fontSize}
+                        onChange={(e) => setCurrentConfig({...currentConfig, fontSize: e.target.value})}
+                    >
+                        <option value="14px">קטן</option>
+                        <option value="18px">בינוני</option>
+                        <option value="25px">גדול</option>
+                        <option value="40px">ענק</option>
+                    </select>
+                </div>
+
+                <button onClick={changeLanguage}>
+                    שפה: {currentConfig.language === 'hebrew' ? 'עברית' : 'English'}
                 </button>
-                {/* כאן תוכלי להוסיף כפתורי צבע וגודל */}
+
+                <button 
+                    onClick={() => setCurrentConfig({...currentConfig, isBold: !currentConfig.isBold})}
+                    style={{ fontWeight: currentConfig.isBold ? 'bold' : 'normal' }}
+                >
+                    {currentConfig.isBold ? 'B (מודגש)' : 'B (רגיל)'}
+                </button>
             </div>
 
-            {/* 3. המקלדת הדינמית */}
-            <div className="keys-grid" style={{ display: 'flex', flexWrap: 'wrap', maxWidth: '600px' }}>
+            {/* 3. המקלדת */}
+            <div className="keys-grid" style={{ display: 'flex', flexWrap: 'wrap', maxWidth: '600px', gap: '5px' }}>
                 {activeLetters.map((char) => (
                     <WhichLanguage
                         key={char} 
                         char={currentConfig.isUpper ? char.toUpperCase() : char} 
                         language={currentConfig.language}
-                        onClick={addChar} // מעבירים את הפונקציה שמוסיפה למערך
+                        onClick={addChar} 
                     />
                 ))}
             </div>
             
-            <button onClick={() => setTypedChars([])}>נקה הכל</button>
+            <button style={{ marginTop: '20px', backgroundColor: '#ffcccc' }} onClick={() => setTypedChars([])}>
+                נקה הכל
+            </button>
         </div>
     );
 }
