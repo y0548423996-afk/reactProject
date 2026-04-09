@@ -5,7 +5,7 @@ import WhichLanguage from "./WhichLanguage";
 
 export default function KeyboardSetting() {
     
-    // 1. הסטייט המרכזי של ההגדרות
+    // 1. הסטייט המרכזי git add .של ההגדרות
     const [currentConfig, setCurrentConfig] = useState<KeyboardConfig>({
         color: 'black',
         fontSize: '18px',
