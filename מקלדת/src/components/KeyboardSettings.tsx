@@ -1,13 +1,14 @@
 import { useState } from "react";
 import type { KeyboardConfig, TypedChar } from "../types";
-import { HEBREW_KEYS, ENGLISH_KEYS } from '../constants';
+import { HEBREW_LAYOUT, ENGLISH_LAYOUT } from '../constants'; 
 import WhichLanguage from "./WhichLanguage";
+import "./KeyboardSettings.css";
 
 export default function KeyboardSetting() {
     
     const [currentConfig, setCurrentConfig] = useState<KeyboardConfig>({
-        color: '#000000', // ברירת מחדל שחור
-        fontSize: '18px',
+        color: '#2d3436', 
+        fontSize: '20px',
         isBold: false,
         language: 'hebrew',
         isUpper: false
@@ -26,36 +27,33 @@ export default function KeyboardSetting() {
         const newCharObj: TypedChar = {
             ...currentConfig,
             value: char,
-            // אם החלטת לוותר על ה-ID, השתמשי בגרסה עם ה-index ב-map למטה
             id: Math.random().toString() 
         };
         setTypedChars([...typedChars, newCharObj]);
     };
 
-    const activeLetters = currentConfig.language === 'hebrew' ? HEBREW_KEYS : ENGLISH_KEYS;
+    const activeLayout = currentConfig.language === 'hebrew' ? HEBREW_LAYOUT : ENGLISH_LAYOUT;
 
     return (
-        <div className="keyboard-container" style={{ direction: 'rtl', padding: '20px' }}>
+        <div className="kb-container">
+            <h3>מקלדת מעוצבת</h3>
             
-            {/* 1. אזור התצוגה */}
-            <div className="display-area" style={{ minHeight: '50px', border: '1px solid #ccc', marginBottom: '20px', padding: '10px' }}>
+            <div className="kb-display">
+                {typedChars.length === 0 && <span className="kb-display-placeholder">התחילי להקליד...</span>}
                 {typedChars.map((charObj) => (
                     <span key={charObj.id} style={{ 
                         color: charObj.color, 
                         fontSize: charObj.fontSize, 
                         fontWeight: charObj.isBold ? 'bold' : 'normal',
                     }}>
-                        {charObj.value}
+                        {charObj.value === ' ' ? '\u00A0' : charObj.value}
                     </span>
                 ))}
             </div>
 
-            {/* 2. כפתורי שליטה - כאן הוספתי את האפשרויות למשתמש */}
-            <div className="controls" style={{ marginBottom: '20px', display: 'flex', gap: '15px', alignItems: 'center' }}>
-                
-                {/* בחירת צבע חופשית */}
-                <div>
-                    <label>בחר צבע: </label>
+            <div className="kb-controls">
+                <div className="kb-label-group">
+                    <label>צבע:</label>
                     <input 
                         type="color" 
                         value={currentConfig.color}
@@ -63,45 +61,50 @@ export default function KeyboardSetting() {
                     />
                 </div>
 
-                {/* בחירת גודל גופן */}
-                <div>
-                    <label>גודל: </label>
+                <div className="kb-label-group">
+                    <label>גודל:</label>
                     <select 
                         value={currentConfig.fontSize}
                         onChange={(e) => setCurrentConfig({...currentConfig, fontSize: e.target.value})}
                     >
-                        <option value="14px">קטן</option>
-                        <option value="18px">בינוני</option>
-                        <option value="25px">גדול</option>
-                        <option value="40px">ענק</option>
+                        <option value="16px">קטן</option>
+                        <option value="20px">בינוני</option>
+                        <option value="30px">גדול</option>
                     </select>
                 </div>
 
-                <button onClick={changeLanguage}>
-                    שפה: {currentConfig.language === 'hebrew' ? 'עברית' : 'English'}
+                <button className="kb-btn" onClick={changeLanguage}>
+                    {currentConfig.language === 'hebrew' ? 'עברית ↔ English' : 'English ↔ עברית'}
                 </button>
 
                 <button 
+                    className={`kb-btn kb-btn-bold ${currentConfig.isBold ? 'active' : 'inactive'}`}
                     onClick={() => setCurrentConfig({...currentConfig, isBold: !currentConfig.isBold})}
-                    style={{ fontWeight: currentConfig.isBold ? 'bold' : 'normal' }}
                 >
-                    {currentConfig.isBold ? 'B (מודגש)' : 'B (רגיל)'}
+                    B
                 </button>
             </div>
 
-            {/* 3. המקלדת */}
-            <div className="keys-grid" style={{ display: 'flex', flexWrap: 'wrap', maxWidth: '600px', gap: '5px' }}>
-                {activeLetters.map((char) => (
-                    <WhichLanguage
-                        key={char} 
-                        char={currentConfig.isUpper ? char.toUpperCase() : char} 
-                        language={currentConfig.language}
-                        onClick={addChar} 
-                    />
+            <div key={currentConfig.language} className="kb-grid">
+                {activeLayout.map((row, rowIndex) => (
+                    <div key={rowIndex} className="kb-row">
+                        {row.map((char) => (
+                            <WhichLanguage
+                                key={char} 
+                                char={currentConfig.isUpper ? char.toUpperCase() : char} 
+                                language={currentConfig.language}
+                                onClick={addChar} 
+                            />
+                        ))}
+                    </div>
                 ))}
+                
+                <button className="kb-space" onClick={() => addChar(' ')}>
+                    {currentConfig.language === 'hebrew' ? 'רווח' : 'Space'}
+                </button>
             </div>
             
-            <button style={{ marginTop: '20px', backgroundColor: '#ffcccc' }} onClick={() => setTypedChars([])}>
+            <button className="kb-clear" onClick={() => setTypedChars([])}>
                 נקה הכל
             </button>
         </div>

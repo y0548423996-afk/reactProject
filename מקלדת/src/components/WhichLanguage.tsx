@@ -13,20 +13,8 @@ function WhichLanguage({ char, language, onClick }: LetterProps) {
 
   return (
     <button 
-      // כאן אנחנו מפעילים את הפונקציה שהאבא שלח לנו
       onClick={() => onClick(char)}
       className={`key ${language}`}
-      style={{
-        width: '40px',
-        height: '40px',
-        margin: '2px',
-        cursor: 'pointer',
-        fontSize: '18px',
-        // עיצוב דינמי קל כדי לראות שהשפה משפיעה
-        backgroundColor: isHebrew ? '#e3f2fd' : '#f1f8e9',
-        border: '1px solid #ccc',
-        borderRadius: '4px'
-      }}
     > 
       {char}
     </button>
