@@ -7,9 +7,6 @@ export interface KeyboardConfig {
     isUpper: boolean;
 }
 
-// 2. הגדרת המבנה של "אות שהוקלדה"
-// שימי לב: עכשיו זה עושה extends ל-KeyboardConfig הנכון
 export interface TypedChar extends KeyboardConfig {
     value: string;
-    id: string;
 }
