@@ -1,3 +1,4 @@
+import { HEBREW_KEYS, ENGLISH_KEYS } from './constants';
 // 1. הגדרת ה"חוזה" (Props)
 interface LetterProps {
   char: string;     // האות עצמה (למשל 'א' או 'A')
