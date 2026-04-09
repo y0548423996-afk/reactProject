@@ -18,10 +18,6 @@ export default function KeyboardSetting() {
     // 2. סטייט למערך התווים שהוקלדו
     const [typedChars, setTypedChars] = useState<TypedChar[]>([]);
 
-    // --- מערכי האותיות ---
-    const hebrewLetters = ['ק', 'ר', 'א', 'ט', 'ו', 'ן', 'ם', 'פ', 'ש', 'ד', 'ג', 'כ', 'ע', 'י', 'ח', 'ל', 'ך', 'ף', 'ז', 'ס', 'ב', 'נ', 'מ', 'צ', 'ת', 'ץ'];
-    const englishLetters = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'z', 'x', 'c', 'v', 'b', 'n', 'm'];
-
     // --- פונקציות עזר (כבר היו לך) ---
     const changeLanguage = () => {
         setCurrentConfig({ 
@@ -41,7 +37,7 @@ export default function KeyboardSetting() {
     };
 
     // בחירת האותיות להצגה לפי השפה בסטייט
-    const activeLetters = currentConfig.language === 'hebrew' ? hebrewLetters : englishLetters;
+    const activeLetters = currentConfig.language === 'hebrew' ? HEBREW_KEYS : ENGLISH_KEYS;
 
     return (
         <div className="keyboard-container" style={{ direction: 'ltr', padding: '20px' }}>
