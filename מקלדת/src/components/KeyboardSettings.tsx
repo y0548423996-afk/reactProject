@@ -1,38 +1,28 @@
 import { useState } from "react";
 import { KeyboardConfig, TypedChar } from "./types";
+import LetterComponent from "./WhichLanguage"; // ייבוא הקומפוננטה שיצרת
+import { HEBREW_KEYS, ENGLISH_KEYS } from '../constants';
+import WhichLanguage from "./WhichLanguage";
 
-type KeyboardSettingProps = {
-    // כאן תוכלי להוסיף Props אם תרצי שהאבא יעביר לה משהו
-}
-
-export default function KeyboardSetting(props: KeyboardSettingProps) {
+export default function KeyboardSetting() {
     
-    // 1. הסטייט המרכזי שכולל את כל המאפיינים (ההגדרות) של הטקסט העכשווי
+    // 1. הסטייט המרכזי של ההגדרות
     const [currentConfig, setCurrentConfig] = useState<KeyboardConfig>({
-        color: 'black',        // צבע
-        fontSize: '18px',      // גודל
-        isBold: false,         // מודגש
-        language: 'hebrew',    // שפה (עברית/אנגלית)
-        isUpper: false         // LOWER-UPPER case
+        color: 'black',
+        fontSize: '18px',
+        isBold: false,
+        language: 'hebrew', // או 'english'
+        isUpper: false
     });
 
-    // 2. סטייט למערך התווים שהוקלדו (כדי לשמור כל אות עם העיצוב הייחודי שלה)
+    // 2. סטייט למערך התווים שהוקלדו
     const [typedChars, setTypedChars] = useState<TypedChar[]>([]);
 
-    // --- פונקציות לשינוי המאפיינים (Setters) ---
+    // --- מערכי האותיות ---
+    const hebrewLetters = ['ק', 'ר', 'א', 'ט', 'ו', 'ן', 'ם', 'פ', 'ש', 'ד', 'ג', 'כ', 'ע', 'י', 'ח', 'ל', 'ך', 'ף', 'ז', 'ס', 'ב', 'נ', 'מ', 'צ', 'ת', 'ץ'];
+    const englishLetters = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'z', 'x', 'c', 'v', 'b', 'n', 'm'];
 
-    const toggleBold = () => {
-        setCurrentConfig({ ...currentConfig, isBold: !currentConfig.isBold });
-    };
-
-    const changeColor = (newColor: string) => {
-        setCurrentConfig({ ...currentConfig, color: newColor });
-    };
-
-    const changeSize = (newSize: string) => {
-        setCurrentConfig({ ...currentConfig, fontSize: newSize });
-    };
-
+    // --- פונקציות עזר (כבר היו לך) ---
     const changeLanguage = () => {
         setCurrentConfig({ 
             ...currentConfig, 
@@ -40,23 +30,58 @@ export default function KeyboardSetting(props: KeyboardSettingProps) {
         });
     };
 
-    const toggleCase = () => {
-        setCurrentConfig({ ...currentConfig, isUpper: !currentConfig.isUpper });
-    };
-
-    // --- פונקציה להוספת תו המשתמשת במאפיינים העכשוויים ---
     const addChar = (char: string) => {
+        // כאן קורה הקסם: האות מקבלת את העיצוב שיש באותו רגע ב-currentConfig
         const newCharObj: TypedChar = {
-            ...currentConfig, // "צילום" של כל ההגדרות מהסטייט ברגע הלחיצה
+            ...currentConfig,
             value: char,
             id: Math.random().toString()
         };
         setTypedChars([...typedChars, newCharObj]);
     };
 
+    // בחירת האותיות להצגה לפי השפה בסטייט
+    const activeLetters = currentConfig.language === 'hebrew' ? hebrewLetters : englishLetters;
+
     return (
-        <div className="keyboard-settings-wrapper">
-            {/* כאן תבני את הממשק שישתמש בסטייט ובפונקציות האלו */}
+        <div className="keyboard-container" style={{ direction: 'ltr', padding: '20px' }}>
+            
+            {/* 1. אזור התצוגה (איפה שהטקסט מופיע) */}
+            <div className="display-area" style={{ minHeight: '50px', border: '1px solid #ccc', marginBottom: '20px', padding: '10px' }}>
+                {typedChars.map(charObj => (
+                    <span key={charObj.id} style={{ 
+                        color: charObj.color, 
+                        fontSize: charObj.fontSize, 
+                        fontWeight: charObj.isBold ? 'bold' : 'normal',
+                        textTransform: charObj.isUpper ? 'uppercase' : 'lowercase'
+                    }}>
+                        {charObj.value}
+                    </span>
+                ))}
+            </div>
+
+            {/* 2. כפתורי שליטה (צבע, שפה וכו') */}
+            <div className="controls" style={{ marginBottom: '10px' }}>
+                <button onClick={changeLanguage}>שנה שפה ({currentConfig.language})</button>
+                <button onClick={() => setCurrentConfig({...currentConfig, isBold: !currentConfig.isBold})}>
+                    {currentConfig.isBold ? 'בטל הדגשה' : 'הדגש'}
+                </button>
+                {/* כאן תוכלי להוסיף כפתורי צבע וגודל */}
+            </div>
+
+            {/* 3. המקלדת הדינמית */}
+            <div className="keys-grid" style={{ display: 'flex', flexWrap: 'wrap', maxWidth: '600px' }}>
+                {activeLetters.map((char) => (
+                    <WhichLanguage
+                        key={char} 
+                        char={currentConfig.isUpper ? char.toUpperCase() : char} 
+                        language={currentConfig.language}
+                        onClick={addChar} // מעבירים את הפונקציה שמוסיפה למערך
+                    />
+                ))}
+            </div>
+            
+            <button onClick={() => setTypedChars([])}>נקה הכל</button>
         </div>
     );
 }
