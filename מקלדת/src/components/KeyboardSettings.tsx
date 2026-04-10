@@ -46,7 +46,6 @@ export default function KeyboardSetting() {
 
     return (
         <div className="kb-container">
-            <h3>מקלדת מעוצבת</h3>
 
             <div className="kb-display">
                 {typedChars.length === 0 && <span className="kb-display-placeholder">התחילי להקליד...</span>}
@@ -90,9 +89,15 @@ export default function KeyboardSetting() {
                     {currentConfig.language === 'hebrew' ? 'עברית ↔ English' : 'English ↔ עברית'}
                 </button>
 
-                <button onClick={() => setCurrentConfig({ ...currentConfig, isUpper: !currentConfig.isUpper })}>
-                    {currentConfig.isUpper ? 'abc' : 'ABC'}
-                </button>
+               {/* הכפתור יוצג רק אם השפה היא אנגלית */}
+{currentConfig.language === 'english' && (
+    <button 
+        className={`tool-btn ${currentConfig.isUpper ? 'active' : ''}`}
+        onClick={() => setCurrentConfig({ ...currentConfig, isUpper: !currentConfig.isUpper })}
+    >
+        {currentConfig.isUpper ? 'abc' : 'ABC'}
+    </button>
+)}
 
                 <button
                     className={`kb-btn kb-btn-bold ${currentConfig.isBold ? 'active' : 'inactive'}`}
