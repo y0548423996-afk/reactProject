@@ -1,60 +1,108 @@
-.game {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-family: Arial, sans-serif;
-  gap: 16px;
-  padding: 20px;
+.main-layout {
+    display: flex;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f6fa;
 }
 
-.scoreboard {
-  display: flex;
-  gap: 30px;
-  font-size: 1.2rem;
-  font-weight: bold;
+/* סרגל הצד */
+.sidebar {
+    width: 250px;
+    background-color: #2f3640;
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
 }
 
-.status {
-  font-size: 1.3rem;
-  min-height: 2rem;
+.status-card {
+    text-align: center;
+    background-color: #353b48;
+    padding: 20px;
+    border-radius: 15px;
 }
 
-.board {
-  display: grid;
-  grid-template-columns: repeat(3, 100px);
-  grid-template-rows: repeat(3, 100px);
-  gap: 6px;
+/* הטיימר העגול */
+.timer-circle {
+    width: 120px;
+    height: 120px;
+    border: 5px solid #4cd137;
+    border-radius: 50%;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
 }
 
-.cell {
-  width: 100px;
-  height: 100px;
-  font-size: 2.5rem;
-  font-weight: bold;
-  cursor: pointer;
-  background: #f0f0f0;
-  border: 2px solid #999;
-  border-radius: 8px;
-  transition: background 0.2s;
+.timer-circle.danger {
+    border-color: #e84118;
+    color: #e84118;
+    animation: pulse 1s infinite;
 }
 
-.cell:hover {
-  background: #ddd;
+.time-number {
+    font-size: 2.5rem;
+    font-weight: bold;
 }
 
-.cell.X { color: #e74c3c; }
-.cell.O { color: #2980b9; }
-
-.btn {
-  padding: 10px 24px;
-  font-size: 1rem;
-  cursor: pointer;
-  border: none;
-  border-radius: 8px;
-  background: #3498db;
-  color: white;
+.time-label {
+    font-size: 0.8rem;
 }
 
-.btn:hover {
-  background: #2980b9;
+/* כפתורים */
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.start-btn, .reset-btn {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.2s;
+}
+
+.start-btn { background-color: #4cd137; color: white; }
+.reset-btn { background-color: #7f8c8d; color: white; }
+
+.start-btn:hover { transform: scale(1.05); background-color: #44bd32; }
+
+/* אזור התוכן */
+.content-area {
+    flex: 1;
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+/* אנימציית דופק לזמן לחוץ */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Game Over */
+.game-over-screen {
+    text-align: center;
+    margin-top: 100px;
+}
+
+.zoom-in {
+    font-size: 5rem;
+    color: #e84118;
+    animation: zoom 0.5s ease-out;
+}
+
+@keyframes zoom {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
 }
