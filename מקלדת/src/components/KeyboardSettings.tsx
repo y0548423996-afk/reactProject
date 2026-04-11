@@ -31,7 +31,6 @@ export default function KeyboardSetting() {
         const newCharObj: TypedChar = {
             ...currentConfig,
             value: char,
-            id: Math.random().toString()
         };
         setTypedChars([...typedChars, newCharObj]);
     };
@@ -50,7 +49,7 @@ export default function KeyboardSetting() {
             <div className="kb-display">
                 {typedChars.length === 0 && <span className="kb-display-placeholder">התחילי להקליד...</span>}
                 {typedChars.map((charObj) => (
-                    <span key={charObj.id} style={{
+                    <span  style={{
                         color: charObj.color,
                         fontSize: charObj.fontSize,
                         fontWeight: charObj.isBold ? 'bold' : 'normal',
